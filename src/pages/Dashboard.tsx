@@ -10,6 +10,7 @@ import { tasksAPI, analyticsAPI } from "@/lib/api";
 import { FolderKanban, CheckSquare, Clock, TrendingUp, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Task } from "@/data/staticData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Dashboard() {
   const navigate = useNavigate();

@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { CreateTaskDialog } from "@/components/CreateTaskDialog";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Tasks() {
   const [searchParams] = useSearchParams();
@@ -152,6 +153,7 @@ export default function Tasks() {
         <Sidebar />
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto space-y-6">
+            <Breadcrumbs />
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-4">

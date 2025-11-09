@@ -18,6 +18,7 @@ import { Project } from "@/data/staticData";
 import { useProjects } from "@/contexts/ProjectContext";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { TeamMemberSelector } from "@/components/TeamMemberSelector";
+import { ManagerSelector } from "@/components/ManagerSelector";
 
 const projectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -196,7 +197,12 @@ export function ProjectFormDialog({ open, onOpenChange, project }: ProjectFormDi
                   <FormItem>
                     <FormLabel>Manager</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter manager name" {...field} />
+                      <ManagerSelector
+                        selectedManager={field.value || ""}
+                        onSelectionChange={(manager) => {
+                          field.onChange(manager);
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -212,7 +218,10 @@ export function ProjectFormDialog({ open, onOpenChange, project }: ProjectFormDi
                   <FormItem>
                     <FormLabel>Start Date</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input 
+                        type="date" 
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -222,15 +231,37 @@ export function ProjectFormDialog({ open, onOpenChange, project }: ProjectFormDi
               <FormField
                 control={form.control}
                 name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const today = new Date().toISOString().split('T')[0];
+                  
+                  return (
+                    <FormItem>
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="date" 
+                          {...field}
+                          min={today}
+                          onChange={(e) => {
+                            const selectedDate = e.target.value;
+                            const todayDate = new Date().toISOString().split('T')[0];
+                            
+                            if (selectedDate < todayDate) {
+                              form.setError("endDate", {
+                                type: "manual",
+                                message: "End date must be today or later"
+                              });
+                              return;
+                            }
+                            
+                            field.onChange(e);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
 

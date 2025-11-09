@@ -30,6 +30,22 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   return response.json();
 };
 
+// OTP API
+export const otpAPI = {
+  send: async (email: string) => {
+    return apiRequest('/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+  verify: async (email: string, otp: string) => {
+    return apiRequest('/otp/verify', {
+      method: 'POST',
+      body: JSON.stringify({ email, otp }),
+    });
+  },
+};
+
 // Auth API
 export const authAPI = {
   login: async (email: string, password: string) => {
@@ -335,6 +351,13 @@ export const usersAPI = {
     return apiRequest('/users/password', {
       method: 'PUT',
       body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  },
+  
+  updateHourlyRate: async (userId: string, hourlyRate: number) => {
+    return apiRequest(`/users/${userId}/hourly-rate`, {
+      method: 'PUT',
+      body: JSON.stringify({ hourlyRate }),
     });
   },
 };

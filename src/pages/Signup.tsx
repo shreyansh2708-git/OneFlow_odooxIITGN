@@ -42,7 +42,7 @@ export default function Signup() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-
+  
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">

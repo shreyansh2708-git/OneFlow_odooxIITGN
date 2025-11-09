@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -28,8 +27,17 @@ import {
 } from "@/lib/api";
 import { 
   ArrowLeft, FileText, ShoppingCart, Receipt, 
-  CreditCard, Wallet, TrendingUp, ListTodo, Edit, MoreVertical
+  CreditCard, Wallet, TrendingUp, ListTodo, Edit, Menu
 } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { CreateSalesOrderDialog } from "@/components/CreateSalesOrderDialog";
 import { CreatePurchaseOrderDialog } from "@/components/CreatePurchaseOrderDialog";
 import { CreateInvoiceDialog } from "@/components/CreateInvoiceDialog";
@@ -70,6 +78,8 @@ export default function ProjectDetail() {
   const [editingSpent, setEditingSpent] = useState(false);
   const [budgetValue, setBudgetValue] = useState("0");
   const [spentValue, setSpentValue] = useState("0");
+  const [activeView, setActiveView] = useState<"overview" | "so" | "po" | "invoices" | "bills" | "expenses" | "tasks">("overview");
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const fetchData = async () => {
     if (!id) return;
@@ -126,7 +136,19 @@ export default function ProjectDetail() {
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      await projectsAPI.update(project.id, { ...project, status: newStatus });
+      const updateData = {
+        name: project.name,
+        description: project.description || "",
+        status: newStatus,
+        manager: project.manager,
+        team: project.team || [],
+        startDate: project.startDate,
+        endDate: project.endDate,
+        budget: project.budget,
+        spent: project.spent,
+        progress: project.progress,
+      };
+      await projectsAPI.update(project.id, updateData);
       toast({
         title: "Success",
         description: "Project status updated",
@@ -137,6 +159,7 @@ export default function ProjectDetail() {
         setCurrentProject(updated);
       }
     } catch (error: any) {
+      console.error("Status update error:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to update status",
@@ -207,6 +230,7 @@ export default function ProjectDetail() {
         <Sidebar />
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto space-y-6">
+            <Breadcrumbs />
             <div>
               <Button 
                 variant="ghost" 
@@ -237,6 +261,100 @@ export default function ProjectDetail() {
                   <Button variant="outline" size="icon" onClick={() => setIsEditDialogOpen(true)}>
                     <Edit className="h-4 w-4" />
                   </Button>
+                  <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Menu className="h-4 w-4" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                      <SheetHeader>
+                        <SheetTitle>Project Sections</SheetTitle>
+                        <SheetDescription>
+                          Navigate through different sections of this project
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="mt-6 space-y-2">
+                        <Button
+                          variant={activeView === "overview" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("overview");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <TrendingUp className="h-4 w-4 mr-2" />
+                          Overview
+                        </Button>
+                        <Button
+                          variant={activeView === "so" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("so");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          Sales Orders
+                        </Button>
+                        <Button
+                          variant={activeView === "po" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("po");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <ShoppingCart className="h-4 w-4 mr-2" />
+                          Purchase Orders
+                        </Button>
+                        <Button
+                          variant={activeView === "invoices" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("invoices");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <Receipt className="h-4 w-4 mr-2" />
+                          Invoices
+                        </Button>
+                        <Button
+                          variant={activeView === "bills" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("bills");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <CreditCard className="h-4 w-4 mr-2" />
+                          Vendor Bills
+                        </Button>
+                        <Button
+                          variant={activeView === "expenses" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("expenses");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <Wallet className="h-4 w-4 mr-2" />
+                          Expenses
+                        </Button>
+                        <Button
+                          variant={activeView === "tasks" ? "default" : "ghost"}
+                          className="w-full justify-start"
+                          onClick={() => {
+                            setActiveView("tasks");
+                            setSheetOpen(false);
+                          }}
+                        >
+                          <ListTodo className="h-4 w-4 mr-2" />
+                          Tasks
+                        </Button>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                 </div>
               </div>
             </div>
@@ -294,64 +412,9 @@ export default function ProjectDetail() {
               </Card>
             </div>
 
-            {/* Links Panel */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Links</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                  <Button variant="outline" className="flex flex-col h-auto py-4">
-                    <FileText className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Sales Orders</span>
-                    <span className="text-lg font-bold">{projectSO.length}</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-auto py-4">
-                    <ShoppingCart className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Purchase Orders</span>
-                    <span className="text-lg font-bold">{projectPO.length}</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-auto py-4">
-                    <Receipt className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Invoices</span>
-                    <span className="text-lg font-bold">{projectInvoices.length}</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-auto py-4">
-                    <CreditCard className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Vendor Bills</span>
-                    <span className="text-lg font-bold">{projectBills.length}</span>
-                  </Button>
-                  <Button variant="outline" className="flex flex-col h-auto py-4">
-                    <Wallet className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Expenses</span>
-                    <span className="text-lg font-bold">{projectExpenses.length}</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="flex flex-col h-auto py-4"
-                    onClick={() => navigate(`/tasks?projectId=${id}`)}
-                  >
-                    <ListTodo className="h-5 w-5 mb-2" />
-                    <span className="text-xs">Tasks</span>
-                    <span className="text-lg font-bold">{projectTasks.length}</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Tabs for detailed views */}
-            <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid w-full grid-cols-7">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="so">Sales Orders</TabsTrigger>
-                <TabsTrigger value="po">Purchase Orders</TabsTrigger>
-                <TabsTrigger value="invoices">Invoices</TabsTrigger>
-                <TabsTrigger value="bills">Bills</TabsTrigger>
-                <TabsTrigger value="expenses">Expenses</TabsTrigger>
-                <TabsTrigger value="tasks">Tasks</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="overview" className="space-y-4">
+            {/* Content based on active view */}
+            {activeView === "overview" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Project Information</CardTitle>
@@ -376,64 +439,76 @@ export default function ProjectDetail() {
                       </div>
                     </div>
                     <div>
+                      <p className="text-sm text-muted-foreground mb-2">Budget</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        {editingBudget ? (
+                          <>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={budgetValue}
+                              onChange={(e) => setBudgetValue(e.target.value)}
+                              className="w-32"
+                            />
+                            <Button size="sm" onClick={handleBudgetUpdate}>Save</Button>
+                            <Button size="sm" variant="outline" onClick={() => {
+                              setEditingBudget(false);
+                              setBudgetValue(project.budget.toString());
+                            }}>Cancel</Button>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-medium">₹{project.budget.toLocaleString()}</p>
+                            <Button variant="ghost" size="icon" onClick={() => setEditingBudget(true)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-2">Spent</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        {editingSpent ? (
+                          <>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={spentValue}
+                              onChange={(e) => setSpentValue(e.target.value)}
+                              className="w-32"
+                            />
+                            <Button size="sm" onClick={handleSpentUpdate}>Save</Button>
+                            <Button size="sm" variant="outline" onClick={() => {
+                              setEditingSpent(false);
+                              setSpentValue(project.spent.toString());
+                            }}>Cancel</Button>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-medium">₹{project.spent.toLocaleString()}</p>
+                            <Button variant="ghost" size="icon" onClick={() => setEditingSpent(true)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div>
                       <p className="text-sm text-muted-foreground mb-2">Budget Usage</p>
                       <Progress value={project.budget > 0 ? (project.spent / project.budget) * 100 : 0} />
                       <div className="flex justify-between text-sm mt-2">
-                        <div className="flex items-center gap-2">
-                          {editingSpent ? (
-                            <>
-                              <Input
-                                type="number"
-                                value={spentValue}
-                                onChange={(e) => setSpentValue(e.target.value)}
-                                className="w-24 h-8"
-                              />
-                              <Button size="sm" onClick={handleSpentUpdate}>Save</Button>
-                              <Button size="sm" variant="ghost" onClick={() => {
-                                setEditingSpent(false);
-                                setSpentValue(project.spent.toString());
-                              }}>Cancel</Button>
-                            </>
-                          ) : (
-                            <>
-                              <span>₹{(project.spent / 1000).toFixed(0)}k spent</span>
-                              <Button size="sm" variant="ghost" onClick={() => setEditingSpent(true)}>
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {editingBudget ? (
-                            <>
-                              <Input
-                                type="number"
-                                value={budgetValue}
-                                onChange={(e) => setBudgetValue(e.target.value)}
-                                className="w-24 h-8"
-                              />
-                              <Button size="sm" onClick={handleBudgetUpdate}>Save</Button>
-                              <Button size="sm" variant="ghost" onClick={() => {
-                                setEditingBudget(false);
-                                setBudgetValue(project.budget.toString());
-                              }}>Cancel</Button>
-                            </>
-                          ) : (
-                            <>
-                              <span>₹{(project.budget / 1000).toFixed(0)}k budget</span>
-                              <Button size="sm" variant="ghost" onClick={() => setEditingBudget(true)}>
-                                <Edit className="h-3 w-3" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
+                        <span>₹{project.spent.toLocaleString()} spent</span>
+                        <span>₹{project.budget.toLocaleString()} budget</span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="so">
+            {activeView === "so" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Sales Orders</CardTitle>
@@ -463,9 +538,11 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="po">
+            {activeView === "po" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Purchase Orders</CardTitle>
@@ -495,9 +572,11 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="invoices">
+            {activeView === "invoices" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Customer Invoices</CardTitle>
@@ -528,9 +607,11 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="bills">
+            {activeView === "bills" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Vendor Bills</CardTitle>
@@ -561,9 +642,11 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="expenses">
+            {activeView === "expenses" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Expenses</CardTitle>
@@ -597,9 +680,11 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
+            )}
 
-              <TabsContent value="tasks">
+            {activeView === "tasks" && (
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Tasks</CardTitle>
@@ -633,8 +718,8 @@ export default function ProjectDetail() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
+              </div>
+            )}
           </div>
         </main>
       </div>

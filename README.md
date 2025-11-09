@@ -1,133 +1,208 @@
-# OneFlow_odooxIITGN
-OneFlow -Plan to Bill in One Place
-1) Goal
-Develop a modular Project Management system that lets a Project Manager take a
-project from planning → execution → billing in one place.
-● Plan: projects, tasks, people, dates.
-● Execute: task board, hour logging, status, blockers.
-● Bill & Track Money: link/create Sales Orders (what the customer buys), Purchase
-Orders (what you buy), Customer Invoices, Vendor Bills, and Expenses—see
-Revenue, Cost, Profit per project.
-2) User Roles
-● Project Manager: creates/edits projects, assigns people, manages tasks,
-approves expenses, triggers invoices.
-● Team Member: views assigned tasks, updates status, logs hours, submits
-expenses.
-● Sales / Finance: creates/links SO/PO/Customer Invoices/Vendor Bills/Expenses
-in Project → Settings.
-● Admin: everything.
-3) Use Case Scenarios
-3.1 Authentication & Access
-● Common Login/Signup page.
-● Role-based dashboard after login (Project Manager / Team Member / Admin).
-3.2 Dashboard & Filtering
-● The landing page lists all ongoing projects as cards.
-● Filters: Planned, In Progress, Completed, On Hold.
-● KPI widgets: Active Projects, Delayed Tasks, Hours Logged, Revenue Earned.
-3.3 Navigation
-● Projects: create and manage projects.
-● Tasks: assign and track task execution.
-● Analytics: progress, utilization, profitability.
-3.4 Profile & Setup (Left Sidebar)
-● My Profile: update personal info and password.
-4) Core Features
-4.1 Projects
-● Create / Edit / Delete projects.
-● Assign Project Manager, Team Members, Deadlines.
-● Show progress bar and budget usage on the project.
-● Links panel (top bar inside a project): quick access to Sales Orders, Purchase
-Orders, Customer Invoices, Vendor Bills, Expenses — shows only items linked to
-the current project.
-4.2 Tasks
-● Create task lists under projects.
-● Assign users, due dates, priorities.
-● States: New → In Progress → Blocked → Done.
-● Log hours; add comments and attachments.
-● Toggle My Tasks / All Tasks.
-4.3 Analytics Dashboard
-● KPI Cards: Total Projects, Tasks Completed, Hours Logged, Billable vs
-Non-billable Hours.
-● Charts: Project Progress %, Resource Utilization, Project Cost vs Revenue.
-5) Settings Menu (Global Lists)
-● Menu items: Sales Orders, Purchase Orders, Customer Invoices, Vendor Bills,
-Expenses (and Products if needed).
-● Each menu shows a global list (not filtered by a project).
-● Users can:
-○ Search (by number, partner, amount, state, etc.)
-○ Filter (date, partner, state, project)
-○ Group by (project, partner, state)
-○ Create new or Link to a project
-● Opening a document from here shows its form, where it can be linked to a project.
-Reminder: Inside a project, the Links panel shows the same document types
-but already filtered to that project for quick viewing.
-6) Sales / Purchase / Billing (managed inside the project)
-● Project → Settings is the single place to create or link:
-○ Sales Orders (SO) — what the customer buys.
-○ Purchase Orders (PO) — what you buy from vendors.
-○ Customer Invoices — your revenue.
-○ Vendor Bills — your cost from vendors.
-○ Expenses — team out-of-pocket, billable or not.
-● Links panel (top bar in a project) shows these docs filtered to the current project
-for quick viewing.
-○ Generated invoice lines link back to the Project (and Sales Order if used).
-7) Timesheets
-● Task → Timesheets:
-○ It refers to the working time of a particular person for a particular session or
-the day .
-○ Timesheets billed on working days are billed or non-billed.
-○ Each timesheet is an expense on the company (negative cash flow.
-○ Each employee has a per hour set by the admin.
-8) Concrete, Real-World Scenarios
-8.1 Fixed-price project
-Your company sells a “Brand Websiteˮ to a customer for ₹1,00,000.
-Flow:
-● Salesperson creates a Sales Order (“Brand Website – ₹1,00,000ˮ) and links it to
-the Brand Website project.
-● Project Manager adds milestones: Design (₹40k), Build (₹60k); creates tasks and
-assigns the team.
-● When Design is Done, create a Customer Invoice for ₹40,000 from the project.
-● When Build is Done, create a Customer Invoice for ₹60,000.
-● Overview shows Revenue ₹1,00,000, costs so far, and Profit.
-8.2 Vendor needed for part of the project
-You sell the project to the customer (Sales Order) and also buy from a vendor.
-Flow:
-● Project Manager creates a Purchase Order to a vendor (e.g., photographer
-₹12,000) and links it to the same project.
-● Vendor finishes work and sends a Vendor Bill for ₹12,000 → Finance records it
-against the PO + project.
-● The project shows actual cost ₹12,000 alongside revenue; profit stays accurate.
-8.3 Team expense during the project
-A team member incurs a small cost.
-Flow:
-● A developer travels to the client and submits an Expense of ₹1,500 with a receipt,
-linked to the project.
-● Project Manager approves. If billable, add it to the next Customer Invoice;
-reimburse the team member.
-● Project totals update: Cost +₹1,500, profit recalculated.
-Why is this Hackathon Problem Important?
-● Students will learn real-world ERP workflows and business workflow.
-● Understand how modules talk to each other for Eg (Projects → Sales -Purchases).
-● Practice problem-solving using business logic, not just coding.
-Terminologies
-1. Sales Order (SO)
-A document that defines what the customer buys — the agreed scope, price, and
-deliverables. It links directly to a project to represent revenue.
-2. Purchase Order (PO)
-A document that records what the company buys from vendors to complete the project.
-It represents costs incurred to deliver the project.
-3. Customer Invoice
-A financial document generated to bill the customer for work done or milestones
-completed. It tracks income generated per project.
-4. Vendor Bill
-A document recording amounts payable to vendors for their goods or services. It
-contributes to the projectʼs total cost.
-5. Timesheet
-A log of hours worked by team members on tasks. It can be billable or non-billable and
-directly affects cost calculation and profitability analysis.
-6. Expense
-A reimbursement or cost item submitted by a team member (e.g., travel, tools) and linked
-to a project. Expenses can be billable (charged to the customer) or non-billable.
-7. Project Management System
-A modular platform that allows planning, executing, and billing of projects within one
-unified interface. It integrates project, task, timesheet, and financial workflows.
-Mockup: https://link.excalidraw.com/l/65VNwvy7c4X/8QsAHjxoXCE
+# OneFlow - Project Management System
+
+A full-stack project management system built with React, TypeScript, Node.js, Express, and MySQL.
+
+## Features
+
+- 🔐 **Authentication** - JWT-based authentication with role-based access control
+- 📊 **Project Management** - Create, update, and manage projects
+- ✅ **Task Management** - Track tasks with status, priority, and time logging
+- 💰 **Financial Tracking** - Sales orders, purchase orders, invoices, bills, and expenses
+- ⏱️ **Timesheet Management** - Log hours for tasks and projects
+- 📈 **Analytics Dashboard** - View project progress and financial analytics
+- 👥 **Team Management** - Assign team members to projects
+- 🎨 **Modern UI** - Built with Tailwind CSS and shadcn/ui components
+
+## Tech Stack
+
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- React Router
+- React Query
+
+### Backend
+- Node.js
+- Express.js
+- MySQL
+- JWT Authentication
+- bcryptjs for password hashing
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- MySQL (v8.0 or higher)
+- npm or yarn
+
+### Backend Setup
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables:**
+   - Copy `.env.example` to `.env`
+   - Update database credentials:
+     ```
+     DB_HOST=localhost
+     DB_USER=root
+     DB_PASSWORD=your_password
+     DB_NAME=oneflow_db
+     JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+     ```
+
+4. **Initialize database:**
+   ```bash
+   npm run init-db
+   ```
+   This will create the database, tables, and default users.
+
+5. **Start the backend server:**
+   ```bash
+   npm start
+   ```
+   The server will run on `http://localhost:3001`
+
+### Frontend Setup
+
+1. **Navigate to root directory:**
+   ```bash
+   cd ..
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure API URL (optional):**
+   - Create `.env` file in root directory:
+     ```
+     VITE_API_URL=http://localhost:3001/api
+     ```
+   - If not set, it defaults to `http://localhost:3001/api`
+
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   The app will run on `http://localhost:8080`
+
+## Default Login Credentials
+
+After running `npm run init-db`, you can login with:
+
+- **Admin**: admin@oneflow.com / admin123
+- **Project Manager**: pm@oneflow.com / pm123
+- **Team Member**: team@oneflow.com / team123
+- **Sales/Finance**: sales@oneflow.com / sales123
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/signup` - Register new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/me` - Get current user
+
+### Projects
+- `GET /api/projects` - Get all projects
+- `GET /api/projects/:id` - Get single project
+- `POST /api/projects` - Create project
+- `PUT /api/projects/:id` - Update project
+- `DELETE /api/projects/:id` - Delete project
+
+### Tasks
+- `GET /api/tasks` - Get all tasks (optional: ?projectId=1)
+- `GET /api/tasks/:id` - Get single task
+- `POST /api/tasks` - Create task
+- `PUT /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+
+### Other Endpoints
+See `backend/README.md` for complete API documentation.
+
+## Project Structure
+
+```
+oneflow/
+├── backend/                 # Backend API
+│   ├── config/             # Database configuration
+│   ├── middleware/         # Auth middleware
+│   ├── routes/             # API routes
+│   ├── scripts/            # Database initialization scripts
+│   └── server.js           # Express server
+├── src/                    # Frontend source
+│   ├── components/         # React components
+│   ├── contexts/           # React contexts
+│   ├── lib/                # Utilities and API client
+│   ├── pages/              # Page components
+│   └── App.tsx             # Main App component
+└── package.json            # Frontend dependencies
+```
+
+## Development
+
+### Backend Development
+```bash
+cd backend
+npm run dev  # Auto-reload on file changes
+```
+
+### Frontend Development
+```bash
+npm run dev  # Starts Vite dev server
+```
+
+## Building for Production
+
+### Backend
+```bash
+cd backend
+npm start
+```
+
+### Frontend
+```bash
+npm run build
+npm run preview
+```
+
+## Database Schema
+
+The database includes the following tables:
+- `users` - User accounts
+- `projects` - Projects
+- `project_team` - Many-to-many relationship for project teams
+- `tasks` - Tasks
+- `sales_orders` - Sales orders
+- `purchase_orders` - Purchase orders
+- `customer_invoices` - Customer invoices
+- `vendor_bills` - Vendor bills
+- `expenses` - Expenses
+- `timesheets` - Timesheet entries
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+ISC
+
+## Support
+
+For issues and questions, please open an issue on GitHub.

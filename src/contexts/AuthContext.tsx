@@ -13,7 +13,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
+  signup: (email: string, password: string, name: string, role: UserRole) => Promise<{ token: string; user: User }>;
   logout: () => void;
   loading: boolean;
 }
@@ -53,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await authAPI.signup(email, password, name, role);
     localStorage.setItem("oneflow_token", response.token);
     setUser(response.user);
+    return response;
   };
 
   const logout = () => {

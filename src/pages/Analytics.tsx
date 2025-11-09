@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useProjects } from "@/contexts/ProjectContext";
 import { analyticsAPI } from "@/lib/api";
 import { TrendingUp, Users, Clock, DollarSign } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function Analytics() {
   const { projects } = useProjects();
@@ -54,6 +55,7 @@ export default function Analytics() {
         <Sidebar />
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto space-y-6">
+            <Breadcrumbs />
             <div>
               <h1 className="text-3xl font-bold">Analytics</h1>
               <p className="text-muted-foreground mt-1">
